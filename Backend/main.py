@@ -1,15 +1,19 @@
 import requests
 import openai
+from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from pytesseract import image_to_string
 from PIL import Image
 import os
 
-# === CONFIGURATION ===
-OPENAI_API_KEY = "sk-proj-Tr4v5n-.......-rdx0v5-...."  # Replace with your OpenAI API key
-GOOGLE_API_KEY = "AIzaSyA....."  # Replace with your Google Custom Search API key
-GOOGLE_CSE_ID = "AIzaSyC5H....."    # Replace with your Custom Search Engine ID
-YOUTUBE_API_KEY = "AIzaSyA....."  # Replace with your YouTube Data API key
+# Load environment variables from .env file
+load_dotenv()
+
+# Access API keys
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 # Set up OpenAI API
 openai.api_key = OPENAI_API_KEY
