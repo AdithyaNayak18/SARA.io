@@ -5,6 +5,7 @@ from PyPDF2 import PdfReader
 from pytesseract import image_to_string
 from PIL import Image
 import os
+# dont forget to install dependencies, ask chatgpt for help if u want
 
 # Load environment variables from .env file
 load_dotenv()
