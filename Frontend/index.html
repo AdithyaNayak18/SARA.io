@@ -199,7 +199,7 @@
       }
     });
 
-    document.getElementById('submit-btn').addEventListener('click', () => {
+    document.getElementById('submit-btn').addEventListener('click', async () => {
       const topic = document.getElementById('topic-input').value;
       const aiResponseEl = document.getElementById('ai-response');
       const linksListEl = document.getElementById('links-list');
@@ -210,28 +210,31 @@
         return;
       }
 
-      // Simulated AI response
-      aiResponseEl.textContent = `Generating AI response for: ${topic}`;
-      setTimeout(() => {
-        aiResponseEl.textContent = `AI response for "${topic}": This is a placeholder response.`;
-      }, 1000);
+      // Fetch AI response
+      try {
+        const aiResponse = await fetch(`/api/response?topic=${encodeURIComponent(topic)}`);
+        const aiData = await aiResponse.json();
+        aiResponseEl.textContent = aiData.response || `AI response for "${topic}": No response found.`;
 
-      // Simulated related YouTube links
-      linksListEl.innerHTML = '';
-      const mockLinks = [
-        `https://www.youtube.com/results?search_query=${encodeURIComponent(topic)}+tutorial`,
-        `https://www.youtube.com/results?search_query=${encodeURIComponent(topic)}+explanation`,
-        `https://www.youtube.com/results?search_query=${encodeURIComponent(topic)}+examples`
-      ];
-      mockLinks.forEach(link => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = link;
-        a.target = '_blank';
-        a.textContent = link;
-        li.appendChild(a);
-        linksListEl.appendChild(li);
-      });
+        // Fetch related YouTube links
+        const linksResponse = await fetch(`/api/links?topic=${encodeURIComponent(topic)}`);
+        const linksData = await linksResponse.json();
+        const mockLinks = linksData.links || [];
+        
+        linksListEl.innerHTML = '';
+        mockLinks.forEach(link => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = link;
+          a.target = '_blank';
+          a.textContent = link;
+          li.appendChild(a);
+          linksListEl.appendChild(li);
+        });
+      } catch (error) {
+        aiResponseEl.textContent = 'Error fetching data. Please try again later.';
+        linksListEl.innerHTML = '<li>Error fetching related links.</li>';
+      }
     });
   </script>
 </body>
